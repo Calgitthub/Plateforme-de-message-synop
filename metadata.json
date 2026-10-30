@@ -1,0 +1,6 @@
+{
+  "name": "Plateforme SYNOP",
+  "description": "Plateforme de saisie et de supervision de données météorologiques pour les stations DMZ avec gestion d'utilisateurs et historisation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

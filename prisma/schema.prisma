@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Role {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  users User[]
+}
+
+model DMZ {
+  id      Int      @id @default(autoincrement())
+  name    String   @unique
+  saisies Saisie[]
+  users   User[]
+}
+
+model User {
+  id               Int         @id @default(autoincrement())
+  email            String      @unique
+  password         String
+  securityQuestion String?
+  securityAnswer   String?
+  isRootAdmin      Boolean     @default(false)
+  roleId           Int
+  dmzId            Int
+  saisies          Saisie[]
+  saisieLogs       SaisieLog[]
+  dmz              DMZ         @relation(fields: [dmzId], references: [id])
+  role             Role        @relation(fields: [roleId], references: [id])
+}
+
+model Saisie {
+  id        Int         @id @default(autoincrement())
+  content   String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  userId    Int
+  dmzId     Int
+  dmz       DMZ         @relation(fields: [dmzId], references: [id])
+  user      User        @relation(fields: [userId], references: [id])
+  logs      SaisieLog[]
+}
+
+model SaisieLog {
+  id         Int      @id @default(autoincrement())
+  saisieId   Int
+  userId     Int
+  oldContent String
+  newContent String
+  changedAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+  saisie     Saisie   @relation(fields: [saisieId], references: [id])
+}
